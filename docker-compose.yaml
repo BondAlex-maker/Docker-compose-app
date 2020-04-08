@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  frontend-server:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - backend-server
+    stdin_open: true
+    volumes:
+    - ./client:./app
+    ports:
+    - 3000:3000
+
+  backend-server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    volumes:
+    - ./server:./server
+    depends_on:
+      - database
+
+
+  database:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: postgres
+      POSTGRES_DB: test
